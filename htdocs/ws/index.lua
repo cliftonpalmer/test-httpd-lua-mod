@@ -5,22 +5,28 @@ require "string"
      function-name in the LuaMapHandler directive to choose a different
      entry point.
 --]]
+
+function dprint(msg)
+    print(string.format("[%s] %s", os.date(), msg))
+end
+
 function handle(r)
     if r:wsupgrade() then -- if we can upgrade:
         r:wswrite("Welcome to websockets!") -- write something to the client
 
         -- Sleep while nothing is being sent to us...
+        dprint("Loop start")
         while r:wspeek() == false do
-           print("usleep")
+           dprint("usleep")
            r.usleep(50000)
         end
-        print("wspeek == true")
+        dprint("wspeek == true")
 
         -- We have data ready!
         local line = r:wsread()
-        print(string.format("wsread: %s", line))
+        dprint(string.format("wsread: %s", line))
 
-        print("wsclose")
+        dprint("wsclose")
         r:wsclose()  -- goodbye!
     end
 end
